@@ -21,7 +21,7 @@ from multiAgents import minimax, negamax
 import sys, random
 
 mode = "player_vs_ai" # default mode for playing the game (player vs AI)
-# quick test for pushing
+
 
 class RandomBoardTicTacToe:
     def __init__(self, size = (600, 600)):

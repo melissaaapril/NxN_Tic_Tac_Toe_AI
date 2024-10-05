@@ -33,7 +33,7 @@ class RandomBoardTicTacToe:
         self.RED = (255, 0, 0)
 
         # Grid Size
-        self.GRID_SIZE = 4
+        self.GRID_SIZE = 3
         self. OFFSET = 5
 
         self.CIRCLE_COLOR = (140, 146, 172)
@@ -48,17 +48,10 @@ class RandomBoardTicTacToe:
 
         # Initialize pygame
         pygame.init()
+        # initislize boatrd with numpy array
+        self.board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
+
         self.game_reset()
-
-    def draw_game(self):
-        # Create a 2 dimensional array using the column and row variables
-        pygame.init()
-        self.screen = pygame.display.set_mode(self.size)
-        pygame.display.set_caption("Tic Tac Toe Random Grid")
-        self.screen.fill(self.BLACK)
-
-        # Draw the grid below
-
         '''
         to draw now we have to define a board, using 2d array/matrix
         where 0 is blank, 1 is a circle, and 2 is an x
@@ -71,37 +64,52 @@ class RandomBoardTicTacToe:
         1 2 0       0 X _
 
         '''
-        # we first have to define the size using the self.GRID_SIZE that tells
-        # us the size of the board
-        board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
-        
-        #let's draw the lines for the board
-        def make_lines(color = self.WHITE):
-            # using the number of rows to make the lines
-            for i in range(1, self.GRID_SIZE):
-                pygame.draw.line(
-                    self.screen, 
-                    color, 
-                    # yhis is start psoition
-                    (self.SIZE *i, 0), 
-                    # end position
-                    (self.SIZE * i, self.HEIGHT),
-                    width = 5)
-                # now draw the horizontal onmes
-                pygame.draw.line(
-                    self.screen, 
-                    color, 
-                    # yhis is start psoition
-                    (0, self.SIZE *i), 
-                    # end position
-                    (self.WIDTH, self.SIZE * i), 
-                    width = 5)
-        make_lines()
-        
+    # This will draw the grids
+    def draw_game(self):
+        # Create a 2 dimensional array using the column and row variables
+        pygame.init()
+        self.screen = pygame.display.set_mode(self.size)
+        pygame.display.set_caption("Tic Tac Toe Random Grid")
+        self.screen.fill(self.BLACK)
+
+        # calling the make lines to draw the game
+        self.make_lines(self.WHITE)
         pygame.display.update()
 
-    def change_turn(self):
+        # we first have to define the size using the self.GRID_SIZE that tells
+        # us the size of the board
+        # board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
+        
+        #let's draw the lines for the board
+    def make_lines(self, color):
+        # using the number of rows to make the lines
+        for i in range(1, self.GRID_SIZE):
+            pygame.draw.line(
+                self.screen, 
+                color, 
+                # yhis is start psoition
+                (self.WIDTH *i, 0), 
+                # end position
+                (self.WIDTH * i, self.height),
+                width = 4)
+            # now draw the horizontal onmes
+        for i in range(1, self.GRID_SIZE):
+            pygame.draw.line(
+                self.screen,
+                color,
+                # yhis is start psoition
+                (0, self.HEIGHT *i),
+                # end position
+                (self.size[0], self.HEIGHT * i),  
+                width = 4)
+                
+                
 
+    def change_turn(self):
+        '''
+        we have to base our board
+        off 0, 1, 2 or a numpy array to keep track of points and turns
+        '''
         if(self.game_state.turn_O):
             pygame.display.set_caption("Tic Tac Toe - O's turn")
         else:
@@ -109,15 +117,29 @@ class RandomBoardTicTacToe:
 
 
     def draw_circle(self, x, y):
-        """
-        YOUR CODE HERE TO DRAW THE CIRCLE FOR THE NOUGHTS PLAYER
-        """
+        # if it is 1 we draw a O
+        if self.board[x][y] == 1:
+            # now we have to draw and divide by 2 to ensure we draw in teh circle
+            pygame.draw.circle(self.screen, 
+            self.CIRCLE_COLOR, 
+            #below is the x center
+            (int(self.WIDTH * x + self.WIDTH // 2)), 
+            # below is the y center
+            (int(self.HEIGHT * y + self.HEIGHT // 2)),
+            # let's choose a radius
+            10,
+            5)
         
 
     def draw_cross(self, x, y):
-        """
-        YOUR CODE HERE TO DRAW THE CROSS FOR THE CROSS PLAYER AT THE CELL THAT IS SELECTED VIA THE gui
-        """
+        # this is the player and 2 = X
+        if self.board[x][y] == 2:
+            # now we have to draw and divide by 2 to ensure we draw in teh circle
+            pygame.draw.line(screen, 
+            color, 
+            (columns * self.GRID_SIZE + self.GRID_SIZE // 4), 
+            (rows * self.GRID_SIZE + self.GRID_SIZE //4),
+            )       
         
 
     def is_game_over(self):
@@ -159,6 +181,7 @@ class RandomBoardTicTacToe:
         """
         
         pygame.display.update()
+        
 
     def play_game(self, mode = "player_vs_ai"):
         done = False
@@ -200,6 +223,7 @@ class RandomBoardTicTacToe:
         pygame.quit()
 
 tictactoegame = RandomBoardTicTacToe()
+
 
 """
 YOUR CODE HERE TO SELECT THE OPTIONS VIA THE GUI CALLED FROM THE ABOVE LINE

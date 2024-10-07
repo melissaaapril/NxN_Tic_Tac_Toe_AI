@@ -1,25 +1,41 @@
 from GameStatus_5120 import GameStatus
 
+'''
+this algorithm will intake the game status to update the game
 
+Game status contains functions to retrieve points, player turns, and player scores
+
+alpha and beta will be pruning variables
+'''
 def minimax(game_state: GameStatus, depth: int, maximizingPlayer: bool, alpha=float('-inf'), beta=float('inf')):
+	# boolean 
 	terminal = game_state.is_terminal()
 	if (depth==0) or (terminal):
 		newScores = game_state.get_scores(terminal)
 		return newScores, None
-    # we need to check whihc player has called this
-    # true means the human has played
-    #if maximizingPlayer = True:
         
 	"""
     YOUR CODE HERE TO FIRST CHECK WHICH PLAYER HAS CALLED THIS FUNCTION (MAXIMIZING OR MINIMIZING PLAYER)
     YOU SHOULD THEN IMPLEMENT MINIMAX WITH ALPHA-BETA PRUNING AND RETURN THE FOLLOWING TWO ITEMS
     1. VALUE
     2. BEST_MOVE
-    
-    THE LINE TO RETURN THESE TWO IS COMMENTED BELOW WHICH YOU CAN USE
     """
+	
+    # we need to check whihc player has called this
+    # true means the human has played
+    if (maximizingPlayer = True):
+		# if max player is true, iterate through all possible positions to get best move
+	    for x in len(GameStatus.get_moves()):
+            # evaluate the state for eahc possible move and check for best move
+            evaluate = minimax(GameStatus.get_new_state(), depth-=1, false)
+            # get the max eval 
+            max_evaluate = max(''' what goes here?''', evaluate )
+		return(max_evaluate)
+	else()
+        
+	
 
-	# return value, best_move
+	return value, best_move
 
 def negamax(game_status: GameStatus, depth: int, turn_multiplier: int, alpha=float('-inf'), beta=float('inf')):
 	terminal = game_status.is_terminal()

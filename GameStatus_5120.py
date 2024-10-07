@@ -57,7 +57,7 @@ class GameStatus:
         """
 		return moves
 
-
+	# 
 	def get_new_state(self, move):
 		new_board_state = self.board_state.copy()
 		x, y = move[0], move[1]

@@ -13,33 +13,36 @@ class GameStatus:
 		self.winner = ""
 
 	''' 
- 	This function will check each row, then each column, and each diagonal in order to determine 
-	the winner for the game
+	YOUR CODE HERE TO CHECK IF ANY CELL IS EMPTY WITH THE VALUE 0. IF THERE IS NO EMPTY
+		THEN YOU SHOULD ALSO RETURN THE WINNER OF THE GAME BY CHECKING THE SCORES FOR EACH PLAYER
  	'''
 	def is_terminal(self):
-		# use the np array to check for 0's, iterate through row and column
-		for row in self.board:
-			# check if it is a 0
-			if (self.board == 0):
-				# the row is cleared so now we check for 0 in the column
-				return # what do we return
-			#for column in self.board
-
-		"""
-        YOUR CODE HERE TO CHECK IF ANY CELL IS EMPTY WITH THE VALUE 0. IF THERE IS NO EMPTY
-        THEN YOU SHOULD ALSO RETURN THE WINNER OF THE GAME BY CHECKING THE SCORES FOR EACH PLAYER 
-        """
+		# use the np array to check if any cell is 0 aka, there game is not yet done and there
+		# ia still space left on the board
+		for row in range(self.GRID_SZE):
+			for col in range(self.GRID_SIZE):
+				if (self.board[row][col] == 0):
+					# there is a 0 therefore the game is not terminal/done
+					return False
+		# otherwise, lets check the wiining player by checking the score
+		player_score, p2_score = self.get_scores()
+		# we now check for draw or p1 or p2 wnning
+		if (player_score > p2_score):
+			return 'Player 1 wins!'
+		elif (player_score < p2_score):
+			return 'Player 2 wins!'
+		else:
+			return 'Draw'
 		
 
 	def get_scores(self, terminal):
 		"""
-        YOUR CODE HERE TO CALCULATE THE SCORES. MAKE SURE YOU ADD THE SCORE FOR EACH PLAYER BY CHECKING 
-        EACH TRIPLET IN THE BOARD IN EACH DIRECTION (HORIZONAL, VERTICAL, AND ANY DIAGONAL DIRECTION)
-        
-        YOU SHOULD THEN RETURN THE CALCULATED SCORE WHICH CAN BE POSITIVE (HUMAN PLAYER WINS),
-        NEGATIVE (AI PLAYER WINS), OR 0 (DRAW)
-        
-        """        
+		YOUR CODE HERE TO CALCULATE THE SCORES. MAKE SURE YOU ADD THE SCORE FOR EACH PLAYER BY CHECKING 
+		EACH TRIPLET IN THE BOARD IN EACH DIRECTION (HORIZONAL, VERTICAL, AND ANY DIAGONAL DIRECTION)
+
+		YOU SHOULD THEN RETURN THE CALCULATED SCORE WHICH CAN BE POSITIVE (HUMAN PLAYER WINS),
+		NEGATIVE (AI PLAYER WINS), OR 0 (DRAW)
+		"""        
 		rows = len(self.board_state)
 		cols = len(self.board_state[0])
 		scores = 0

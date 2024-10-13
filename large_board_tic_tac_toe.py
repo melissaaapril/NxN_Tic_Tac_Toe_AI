@@ -154,6 +154,9 @@ class RandomBoardTicTacToe:
         
         YOUR RETURN VALUE SHOULD BE TRUE OR FALSE TO BE USED IN OTHER PARTS OF THE GAME
         """
+        # not sure if this code is right because there must me more to it no?
+        # *************************************** check this later!!! **************************
+        return self.is_terminal()
     
 
     def move(self, move):
@@ -226,6 +229,7 @@ class RandomBoardTicTacToe:
             pygame.display.update()
 
         pygame.quit()
+
 
 tictactoegame = RandomBoardTicTacToe()
 

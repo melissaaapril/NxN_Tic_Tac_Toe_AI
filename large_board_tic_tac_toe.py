@@ -80,7 +80,10 @@ class RandomBoardTicTacToe:
         # us the size of the board
         # board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
         
-        #let's draw the lines for the board
+    '''
+    This function will make lines for the grid and accept a color using the grid lines and such
+    - MC
+    '''
     def make_lines(self, color):
         # using the number of rows to make the lines
         for i in range(1, self.GRID_SIZE):
@@ -165,6 +168,7 @@ class RandomBoardTicTacToe:
         THE RETURN VALUES FROM YOUR MINIMAX/NEGAMAX ALGORITHM SHOULD BE THE SCORE, MOVE WHERE SCORE IS AN INTEGER
         NUMBER AND MOVE IS AN X,Y LOCATION RETURNED BY THE AGENT
         """
+        #if 
         
         self.change_turn()
         pygame.display.update()

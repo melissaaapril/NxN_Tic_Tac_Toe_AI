@@ -14,6 +14,14 @@ class GameStatus:
 
 	# 
 	def is_terminal(self):
+		# use the np array to check for 0's, iterate through row and column
+		for row in self.board:
+			# check if it is a 0
+			if (self.board == 0):
+				# the row is cleared so now we check for 0 in the column
+				return # what do we return
+			#for column in self.board
+
 		"""
         YOUR CODE HERE TO CHECK IF ANY CELL IS EMPTY WITH THE VALUE 0. IF THERE IS NO EMPTY
         THEN YOU SHOULD ALSO RETURN THE WINNER OF THE GAME BY CHECKING THE SCORES FOR EACH PLAYER 

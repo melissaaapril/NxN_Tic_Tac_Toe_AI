@@ -6,9 +6,38 @@ def minimax(game_state: GameStatus, depth: int, maximizingPlayer: bool, alpha=fl
 	if (depth==0) or (terminal):
 		newScores = game_state.get_scores(terminal)
 		return newScores, None
-    # we need to check whihc player has called this
-    # true means the human has played
-    #if maximizingPlayer = True:
+    
+	if maximizingPlayer == True:
+		maxEval = float('-inf')
+		best_move = None # track best move
+		for move in game_state.get_moves(): #iterate over all possible moves in current game state
+			child_state = game_state.get_new_state(move) #generate gamestate from making this move
+			eval, _ = minimax(child_state, depth - 1, False, alpha, beta) #recusively call minimax for the minimizing player
+			if eval > maxEval: #conditional to update maxeval if evaluation score is better.
+				maxEval = eval
+				best_move = move
+			if beta <= maxEval: #alpha beta pruning. if beta <= alpha, we stop considering other moves, because minimizing player wouldnt allow this outcome
+				break
+			alpha = max(alpha, maxEval) #update alpha
+		return maxEval, best_move # returns best score
+    else:
+        minEval = float('inf')
+        best_move = None
+
+        for move in game_state.get_moves(): #same  logic as above
+            child_state = game_state.get_new_state(move) 
+
+            eval, _ = minimax(child_state, depth - 1, True, alpha, beta) 
+
+            if eval < minEval: 
+                minEval = eval
+                best_move = move 
+
+            if beta >= minEval: 
+                break
+            beta = min(beta, minEval) 
+        return minEval, best_move
+
         
 	"""
     YOUR CODE HERE TO FIRST CHECK WHICH PLAYER HAS CALLED THIS FUNCTION (MAXIMIZING OR MINIMIZING PLAYER)
@@ -20,6 +49,8 @@ def minimax(game_state: GameStatus, depth: int, maximizingPlayer: bool, alpha=fl
     """
 
 	# return value, best_move
+
+
 
 def negamax(game_status: GameStatus, depth: int, turn_multiplier: int, alpha=float('-inf'), beta=float('inf')):
 	terminal = game_status.is_terminal()

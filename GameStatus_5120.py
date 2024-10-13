@@ -12,7 +12,10 @@ class GameStatus:
 
 		self.winner = ""
 
-	# 
+	''' 
+ 	This function will check each row, then each column, and each diagonal in order to determine 
+	the winner for the game
+ 	'''
 	def is_terminal(self):
 		# use the np array to check for 0's, iterate through row and column
 		for row in self.board:
@@ -65,7 +68,7 @@ class GameStatus:
         """
 		return moves
 
-
+	# 
 	def get_new_state(self, move):
 		new_board_state = self.board_state.copy()
 		x, y = move[0], move[1]

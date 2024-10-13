@@ -1,4 +1,4 @@
-"""
+'''
 PLEASE READ THE COMMENTS BELOW AND THE HOMEWORK DESCRIPTION VERY CAREFULLY BEFORE YOU START CODING
 
  The file where you will need to create the GUI which should include (i) drawing the grid, (ii) call your Minimax/Negamax functions
@@ -13,7 +13,7 @@ PLEASE READ THE COMMENTS BELOW AND THE HOMEWORK DESCRIPTION VERY CAREFULLY BEFOR
  
  PLEASE CAREFULLY SEE THE PORTIONS OF THE CODE/FUNCTIONS WHERE IT INDICATES "YOUR CODE BELOW" TO COMPLETE THE SECTIONS
  
-"""
+'''
 import pygame
 import numpy as np
 from GameStatus_5120 import GameStatus
@@ -21,6 +21,7 @@ from multiAgents import minimax, negamax
 import sys, random
 
 mode = "player_vs_ai" # default mode for playing the game (player vs AI)
+
 
 class RandomBoardTicTacToe:
     def __init__(self, size = (600, 600)):

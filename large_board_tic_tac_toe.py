@@ -79,7 +79,7 @@ class RandomBoardTicTacToe:
 
         # we first have to define the size using the self.GRID_SIZE that tells
         # us the size of the board
-        # board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
+        board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
         
     '''
     This function will make lines for the grid and accept a color using the grid lines and such

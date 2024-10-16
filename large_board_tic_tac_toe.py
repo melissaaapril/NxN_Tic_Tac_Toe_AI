@@ -19,6 +19,8 @@ import numpy as np
 from GameStatus_5120 import GameStatus
 from multiAgents import minimax, negamax
 import sys, random
+from pygame_widgets.button import Button
+
 
 mode = "player_vs_ai" # default mode for playing the game (player vs AI)
 
@@ -52,6 +54,15 @@ class RandomBoardTicTacToe:
         # initislize boatrd with numpy array
         self.board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
 
+        '''
+        lets draw the GUI into here including buttons'''
+        # we will default to algorithm minimax for now
+        self.alg = "minimax"
+
+        # initialize buttons/dropdowns
+        self.create_button = None
+        self.x_nought = None
+
         self.game_reset()
         '''
         to draw now we have to define a board, using 2d array/matrix
@@ -75,11 +86,9 @@ class RandomBoardTicTacToe:
 
         # calling the make lines to draw the game
         self.make_lines(self.WHITE)
+
         pygame.display.update()
 
-        # we first have to define the size using the self.GRID_SIZE that tells
-        # us the size of the board
-        # board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
         
     '''
     This function will make lines for the grid and accept a color using the grid lines and such
@@ -106,8 +115,17 @@ class RandomBoardTicTacToe:
                 # end position
                 (self.size[0], self.HEIGHT * i),  
                 width = 4)
-                
-                
+    '''
+    this function will create the drop down for the character or x or 0 select
+
+    def x_nought_select(self):
+        self.x_nought_select = Dropdown(
+            self.screen, 120, 10, 100, 50, name='Select Your Mark',
+            choices=['X', 'O'],
+            borderRadius=3, colour=pygame.Color('green'), values=['X', 'O'], direction='down', textHAlign='left'
+        )
+    '''
+
 
     def change_turn(self):
         '''
@@ -162,7 +180,10 @@ class RandomBoardTicTacToe:
     def move(self, move):
         self.game_state = self.game_state.get_new_state(move)
 
-
+    '''
+    this code will select an algorithm or use the user sleected algorithm and initiate game play
+    draws the AI's moves once the AI is chosen
+    '''
     def play_ai(self):
         """
         YOUR CODE HERE TO CALL MINIMAX OR NEGAMAX DEPENDEING ON WHICH ALGORITHM SELECTED FROM THE GUI
@@ -172,7 +193,41 @@ class RandomBoardTicTacToe:
         THE RETURN VALUES FROM YOUR MINIMAX/NEGAMAX ALGORITHM SHOULD BE THE SCORE, MOVE WHERE SCORE IS AN INTEGER
         NUMBER AND MOVE IS AN X,Y LOCATION RETURNED BY THE AGENT
         """
-        #if 
+        # we will default to minimax, but this may changed based on GUI
+        alg = "minimax"
+
+        # lets let the player choose the character
+        if x_nought == 'X':
+            x_nought = 2
+        else:
+            x_nought = 1
+
+        if (alg =="minimax"):
+            # minimax params: game_state: GameStatus, depth: int, maximizingPlayer: bool, alpha=float('-inf'), beta=float('inf')
+            # maximizing is True since AI will amke a move now
+            _, best_move = minimax(self.board, True)
+        
+        # now lets actually make the best move we got
+        # error handling bc it cant be none
+        if (best_move != None):
+            # best move will be a grid placement so we need xy
+            x,y = best_move
+            # we mark the choice on the board
+            selfboard[x][y] = x_nought if self.game_state.turn_O else 2
+            # we draw the move
+            if self.game_state.turn_O:
+                self.draw_circle(x, y)
+            else:
+                self.draw_cross(x, y)
+
+        # now we have to change the turn
+        self.change_turn()
+        pygame.display.update()
+
+        if self.is_game_over():
+            # if game over, display the score and update UI
+            terminal = self.game_state.is_terminal()
+
         
         self.change_turn()
         pygame.display.update()
@@ -214,7 +269,8 @@ class RandomBoardTicTacToe:
                 DRAW CROSS (OR NOUGHT DEPENDING ON WHICH SYMBOL YOU CHOSE FOR YOURSELF FROM THE gui) AND CALL YOUR 
                 PLAY_AI FUNCTION TO LET THE AGENT PLAY AGAINST YOU
                 """
-                
+                if event.type == pygame.QUIT:
+                    done = True
                 # if event.type == pygame.MOUSEBUTTONUP:
                     # Get the position
                     
@@ -226,6 +282,7 @@ class RandomBoardTicTacToe:
                     # Within this code portion, continue checking if the game has ended by using is_terminal function
                     
             # Update the screen with what was drawn.
+                if self
             pygame.display.update()
 
         pygame.quit()

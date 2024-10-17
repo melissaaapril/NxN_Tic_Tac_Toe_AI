@@ -1,58 +1,62 @@
+# multiAgents.py
 from GameStatus_5120 import GameStatus
 
-'''
-this algorithm will intake the game status to update the game
-
-Game status contains functions to retrieve points, player turns, and player scores
-
-alpha and beta will be pruning variables
-'''
 def minimax(game_state: GameStatus, depth: int, maximizingPlayer: bool, alpha=float('-inf'), beta=float('inf')):
-	# boolean 
-	terminal = game_state.is_terminal()
-	if (depth==0) or (terminal):
-		newScores = game_state.get_scores(terminal)
-		return newScores, None
-        
-	"""
-    YOUR CODE HERE TO FIRST CHECK WHICH PLAYER HAS CALLED THIS FUNCTION (MAXIMIZING OR MINIMIZING PLAYER)
-    YOU SHOULD THEN IMPLEMENT MINIMAX WITH ALPHA-BETA PRUNING AND RETURN THE FOLLOWING TWO ITEMS
-    1. VALUE
-    2. BEST_MOVE
-    """
-	
-    # we need to check whihc player has called this
-    # true means the human has played
-    if (maximizingPlayer = True):
-		# if max player is true, iterate through all possible positions to get best move
-	    for x in len(GameStatus.get_moves()):
-            # evaluate the state for eahc possible move and check for best move
-            evaluate = minimax(GameStatus.get_new_state(), depth-=1, false)
-            # get the max eval 
-            max_evaluate = max(''' what goes here?''', evaluate )
-		return(max_evaluate)
-	else()
-        
-	
+    # check if game is over or depth limit is reached
+    terminal = game_state.is_terminal()
+    if depth == 0 or terminal:
+        newScores = game_state.get_scores(terminal)
+        return newScores, None  # return score if terminal or max depth
 
-	return value, best_move
+    if maximizingPlayer:
+        maxEval = float('-inf')
+        best_move = None
+        for move in game_state.get_moves():
+            # evaluate child state assuming minimizing play
+            child_state = game_state.get_new_state(move)
+            eval, _ = minimax(child_state, depth - 1, False, alpha, beta)
+            if eval > maxEval:  # update best score and move if higher
+                maxEval = eval
+                best_move = move
+            alpha = max(alpha, eval)  # update alpha
+            if beta <= alpha:  # alpha-beta pruning
+                break
+        return maxEval, best_move
+    else:
+        minEval = float('inf')
+        best_move = None
+        for move in game_state.get_moves():
+            # evaluate child state assuming maximizing play
+            child_state = game_state.get_new_state(move)
+            eval, _ = minimax(child_state, depth - 1, True, alpha, beta)
+            if eval < minEval:  # update best score and move if lower
+                minEval = eval
+                best_move = move
+            beta = min(beta, eval)  # update beta
+            if beta <= alpha:  # alpha-beta pruning
+                break
+        return minEval, best_move
 
-def negamax(game_status: GameStatus, depth: int, turn_multiplier: int, alpha=float('-inf'), beta=float('inf')):
-	terminal = game_status.is_terminal()
-	if (depth==0) or (terminal):
-		scores = game_status.get_negamax_scores(terminal)
-		return scores, None
+def negamax(game_state: GameStatus, depth: int, color: int, alpha=float('-inf'), beta=float('inf')):
+    # check if game is over or depth limit is reached
+    terminal = game_state.is_terminal()
+    if depth == 0 or terminal:
+        scores = color * game_state.get_negamax_scores(terminal)
+        return scores, None  # return score adjusted for current player
 
-	"""
-    YOUR CODE HERE TO CALL NEGAMAX FUNCTION. REMEMBER THE RETURN OF THE NEGAMAX SHOULD BE THE OPPOSITE OF THE CALLING
-    PLAYER WHICH CAN BE DONE USING -NEGAMAX(). THE REST OF YOUR CODE SHOULD BE THE SAME AS MINIMAX FUNCTION.
-    YOU ALSO DO NOT NEED TO TRACK WHICH PLAYER HAS CALLED THE FUNCTION AND SHOULD NOT CHECK IF THE CURRENT MOVE
-    IS FOR MINIMAX PLAYER OR NEGAMAX PLAYER
-    RETURN THE FOLLOWING TWO ITEMS
-    1. VALUE
-    2. BEST_MOVE
-    
-    THE LINE TO RETURN THESE TWO IS COMMENTED BELOW WHICH YOU CAN USE
-    
-    """
-    #return value, best_move
+    maxEval = float('-inf')
+    best_move = None
+    for move in game_state.get_moves():
+        # evaluate child state from opponent's perspective
+        child_state = game_state.get_new_state(move)
+        eval, _ = negamax(child_state, depth - 1, -color, -beta, -alpha)
+        eval = -eval  # reverse score for current player's perspective
+        if eval > maxEval:  # update best score and move if higher
+            maxEval = eval
+            best_move = move
+        alpha = max(alpha, eval)  # update alpha
+        if alpha >= beta:  # alpha-beta pruning
+            break
+    return maxEval, best_move
+
+

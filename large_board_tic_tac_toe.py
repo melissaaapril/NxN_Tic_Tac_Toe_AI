@@ -38,6 +38,8 @@ class RandomBoardTicTacToe:
         # Grid Size
         self.GRID_SIZE = 3
         self. OFFSET = 5
+        # let's make this the default
+        self.algorithm = "minimax"
 
         self.CIRCLE_COLOR = (140, 146, 172)
         self.CROSS_COLOR = (140, 146, 172)
@@ -49,19 +51,10 @@ class RandomBoardTicTacToe:
         # This sets the margin between each cell
         self.MARGIN = 5
 
-        # Initialize pygame
-        pygame.init()
-        # initislize boatrd with numpy array
-        self.board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
+        self.OFFSET = 5
 
-        '''
-        lets draw the GUI into here including buttons'''
-        # we will default to algorithm minimax for now
-        self.alg = "minimax"
-
-        # initialize buttons/dropdowns
-        self.create_button = None
-        self.x_nought = None
+        # intiialize board as array
+        self.board_state = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
 
         self.game_reset()
         '''
@@ -78,10 +71,14 @@ class RandomBoardTicTacToe:
         '''
     # This will draw the grids
     def draw_game(self):
-        # Create a 2 dimensional array using the column and row variables
-        pygame.init()
-        self.screen = pygame.display.set_mode(self.size)
-        pygame.display.set_caption("Tic Tac Toe Random Grid")
+        # self.screen = pygame.display.set_mode(self.size)
+        # pygame.display.set_caption("Tic Tac Toe Random Grid")
+
+        # calc width and height for grid cells
+        self.WIDTH = self.size[0] / self.grid_size - self.OFFSET
+        self.HEIGHT = self.size[1] / self.grid_size - self.OFFSET
+        self.MARGIN = 5
+
         self.screen.fill(self.BLACK)
 
         # calling the make lines to draw the game
@@ -89,6 +86,9 @@ class RandomBoardTicTacToe:
 
         pygame.display.update()
 
+        # we first have to define the size using the self.GRID_SIZE that tells
+        # us the size of the board
+        board = np.zeros((self.GRID_SIZE, self.GRID_SIZE))
         
     '''
     This function will make lines for the grid and accept a color using the grid lines and such
@@ -115,16 +115,6 @@ class RandomBoardTicTacToe:
                 # end position
                 (self.size[0], self.HEIGHT * i),  
                 width = 4)
-    '''
-    this function will create the drop down for the character or x or 0 select
-
-    def x_nought_select(self):
-        self.x_nought_select = Dropdown(
-            self.screen, 120, 10, 100, 50, name='Select Your Mark',
-            choices=['X', 'O'],
-            borderRadius=3, colour=pygame.Color('green'), values=['X', 'O'], direction='down', textHAlign='left'
-        )
-    '''
 
 
     def change_turn(self):

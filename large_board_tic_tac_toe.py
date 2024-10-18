@@ -281,8 +281,6 @@ class RandomBoardTicTacToe:
                     # Then draw the symbol for your opponent in the selected cell
                     # Within this code portion, continue checking if the game has ended by using is_terminal function
                     
-            # Update the screen with what was drawn.
-                if self
             pygame.display.update()
 
         pygame.quit()

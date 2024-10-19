@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-
+	# -*- coding: utf-8 -*-
+import numpy as np
 
 class GameStatus:
 
@@ -15,24 +15,41 @@ class GameStatus:
 	''' 
 	YOUR CODE HERE TO CHECK IF ANY CELL IS EMPTY WITH THE VALUE 0. IF THERE IS NO EMPTY
 		THEN YOU SHOULD ALSO RETURN THE WINNER OF THE GAME BY CHECKING THE SCORES FOR EACH PLAYER
- 	'''
+	'''
 	def is_terminal(self):
 		# use the np array to check if any cell is 0 aka, there game is not yet done and there
 		# ia still space left on the board
-		for row in range(self.GRID_SZE):
-			for col in range(self.GRID_SIZE):
-				if (self.board[row][col] == 0):
-					# there is a 0 therefore the game is not terminal/done
-					return False
-		# otherwise, lets check the wiining player by checking the score
-		player_score, p2_score = self.get_scores()
-		# we now check for draw or p1 or p2 wnning
-		if (player_score > p2_score):
-			return 'Player 1 wins!'
-		elif (player_score < p2_score):
-			return 'Player 2 wins!'
-		else:
-			return 'Draw'
+		"""
+		Check if the game has ended. Returns True if the game is over, otherwise False.
+		"""
+		# Check rows and columns for a win
+		for i in range(len(self.board_state)):
+			# Check rows
+			if np.all(self.board_state[i, :] == 1) or np.all(self.board_state[i, :] == 2):
+				self.winner = "Player 1" if np.all(self.board_state[i, :] == 1) else "Player 2"
+				return True
+
+			# this will check the columns
+			if np.all(self.board_state[:, i] == 1) or np.all(self.board_state[:, i] == 2):
+				self.winner = "Player 1" if np.all(self.board_state[:, i] == 1) else "Player 2"
+				return True
+
+		# check diagonals for a win
+		if np.all(np.diag(self.board_state) == 1) or np.all(np.diag(self.board_state) == 2):
+			self.winner = "Player 1" if np.all(np.diag(self.board_state) == 1) else "Player 2"
+			return True
+		# other diagonal
+		if np.all(np.diag(np.fliplr(self.board_state)) == 1) or np.all(np.diag(np.fliplr(self.board_state)) == 2):
+			self.winner = "Player 1" if np.all(np.diag(np.fliplr(self.board_state)) == 1) else "Player 2"
+			return True
+
+		# check fi the board is full
+		if not np.any(self.board_state == 0):
+			self.winner = "Draw"
+			return True
+
+		# if board not full, game is not over
+		return False
 		
 
 	def get_scores(self, terminal):
@@ -50,60 +67,59 @@ class GameStatus:
 		rows = len(self.board_state)
 		cols = len(self.board_state[0])
 		scores = 0
-		check_point = 3 if terminal else 2
 		# we will have to check the rows, columns, and diagonals
-
+		'''
+		this code will be based hevaily hevaily on abdul's code for the get scores function
+		thank you abdul
+		'''
 		# lets check rows first
-		for rows in range(rows):
+		for i in range(rows):
 			# check rows
 			# we have to have the -2 to make sure we dont go ou of bounds
-			for col in range(cols-check_point +1):
+			for j in range(cols-2):
 				# the if statement below says if 0,0 0,1 or 0,3 are NOT 0 and then seeing 
 				# if they are either a row of 1 or 2 (0 or X) then it is a point
-				if (all(self.board_state[row,col+i] == self.board_state[row][col])):
-					# if that is true lets check if it is a X or a 0 (remember 0 is 1 and 2 is X)
-					if (self.board_state[row][col] == 2):
-						# if there is a row of X, player 2 or AI wins
-						score -= 1
-					else:
-						# if there is a row of 0, player 1 wins
-						score += 1
+				triplet = self.board_state[i, j:j+3]
+				# if that is true lets check if it is a X or a 0 (remember 0 is 1 and 2 is X)
+				if np.all(triplet == 1):
+					# if there is a row of O, player 2 or AI wins
+					scores += 1
+				elif np.all(triplet == 2):
+					# if there is a row of 2, player 1 wins
+					scores -= 1
 		
 		# now let's check the columns
-		for col in range(cols):
-			for row in range(rows-check_point):
-				if (all(self.board_state[row + i,col] == self.board_state[row][col] !=0 for i in range(check_point))):
-				# if that is true lets check if it is a X or a 0 (remember 0 is 1 and 2 is X)
-					if (self.board_state[row][col] == 2):
-						# if there is a row of X, player 2 or AI wins
-						score -= 1
-					else:
-						# if there is a row of 1, player 1 wins
-						score += 1
-		'''
-		These might definitely be wrong, i didnt know how to use checkpoint here??
-		'''
+		for i in range(rows - 2):
+			for j in range(cols):
+				triplet = self.board_state[i:i+3, j]
+			if np.all(triplet == 1):  # Player 1 (or O)
+				scores += 1
+			elif np.all(triplet == 2):  # Player 2 (or X)
+				scores -= 1
+
 		# now we check diagonal of 11 22 33 or 00 11 22 aka the \ and next we check the / diagonal
-		if (self.board_state[0][0] == self.board_state[1][1] == self.board_state[2][2] !=0):
-			# we see what values they have
-			if self.board_state[0][0] == 1:
-				score += 1
-			else:
-				score -=1
-		
-		# now we check the other diagonal
-		if (self.board_state[0][2] == self.board_state[1][1] == self.board_state[2][0] !=0):
-			# we see what values they have
-			if self.board_state[0][2] == 1:
-				score += 1
-			else:
-				score -=1
+		for i in range(rows - 2):
+			for j in range(cols - 2):
+				# first diagonal
+				triplet = [self.board_state[i+k, j+k] for k in range(3)]
+				if all(x == 1 for x in triplet):  # Player 1 (or O)
+					scores += 1
+				elif all(x == 2 for x in triplet):  # Player 2 (or X)
+					scores -= 1
+
+				# the other diagonal
+				triplet = [self.board_state[i+2-k, j+k] for k in range(3)]
+				if all(x == 1 for x in triplet):  # Player 1 (or O)
+					scores += 1
+				elif all(x == 2 for x in triplet):  # Player 2 (or X)
+					scores -= 1
 		# finally, we return final score
-		return score
+		return scores
 
 		
 	    
-
+	'''
+	this is on the back burner for now
 	def get_negamax_scores(self, terminal):
 		"""
         YOUR CODE HERE TO CALCULATE NEGAMAX SCORES. THIS FUNCTION SHOULD EXACTLY BE THE SAME OF GET_SCORES UNLESS
@@ -115,7 +131,7 @@ class GameStatus:
 		cols = len(self.board_state[0])
 		scores = 0
 		check_point = 3 if terminal else 2
-	    
+	'''
 
 	def get_moves(self):
 		moves = []
@@ -124,26 +140,24 @@ class GameStatus:
         MINIMAX OR NEGAMAX FUNCTIONS
         """
 		# we will ahve to iterate through rows and columns to count number of empty cells
-		# we need to check if there are still 0's on the board aka new moves to be found
-		if (self.game_state == 0):
-			# we use the same logic as in egt scores to check if there are 0s on board
-			rows = len(self.board_state)
-			cols = len(self.board_state[0])
+		# we use the same logic as in egt scores to check if there are 0s on board
+		rows = len(self.board_state)
+		cols = len(self.board_state[0])
 
-			# now check the rows and columns for mvoes
-			for row in range(rows):
-				for col in range(cols):
-					# of this specific board place is a 0, save the board space
-					if (self.board_state[row][col] == 0):
-						moves.append((row,col))
+		# now check the rows and columns for mvoes
+		for row in range(rows):
+			for col in range(cols):
+				# of this specific board place is a 0, save the board space
+				if (self.board_state[row][col] == 0):
+					moves.append((row,col))
 		#return list of moves
 		return moves
 
 	# gets new state for board
 	def get_new_state(self, move):
 		new_board_state = self.board_state.copy()
-		x, y = move[0], move[1]
-		new_board_state[x,y] = 1 if self.turn_O else -1
+		x, y = move
+		new_board_state[x,y] = 1 if self.turn_O else 2
 		return GameStatus(new_board_state, not self.turn_O)
 '''
 Resources below:

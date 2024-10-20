@@ -359,9 +359,12 @@ class RandomBoardTicTacToe:
                         # elif self.current_player == 1 and self.player_symbol == 'O':
                         #   self.draw_circle(gridX, gridY)
                         #  self.current_player = 2
-                    if self.current_player == 2 and self.mode == "player_vs_ai":
-                        self.play_ai()
-                        self.current_player = 1
+                        if self.current_player == 2 and self.mode == "player_vs_ai":
+                            self.play_ai()
+                            self.current_player = 1
+
+                        if self.is_game_over() == True:
+                            pygame.quit()
 
             pygame.display.update()
             clock.tick(30)

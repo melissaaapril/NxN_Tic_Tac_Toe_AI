@@ -34,19 +34,19 @@ class GameStatus:
 				self.winner = "Player 1" if np.all(self.board_state[:, i] == 1) else "Player 2"
 				return True
 
-		# check diagonals for a win
-		if np.all(np.diag(self.board_state) == 1) or np.all(np.diag(self.board_state) == 2):
-			self.winner = "Player 1" if np.all(np.diag(self.board_state) == 1) else "Player 2"
-			return True
-		# other diagonal
-		if np.all(np.diag(np.fliplr(self.board_state)) == 1) or np.all(np.diag(np.fliplr(self.board_state)) == 2):
-			self.winner = "Player 1" if np.all(np.diag(np.fliplr(self.board_state)) == 1) else "Player 2"
-			return True
+			# check diagonals for a win
+			if np.all(np.diag(self.board_state) == 1) or np.all(np.diag(self.board_state) == 2):
+				self.winner = "Player 1" if np.all(np.diag(self.board_state) == 1) else "Player 2"
+				return True
+			# other diagonal
+			if np.all(np.diag(np.fliplr(self.board_state)) == 1) or np.all(np.diag(np.fliplr(self.board_state)) == 2):
+				self.winner = "Player 1" if np.all(np.diag(np.fliplr(self.board_state)) == 1) else "Player 2"
+				return True
 
-		# check fi the board is full
-		if not np.any(self.board_state == 0):
-			self.winner = "Draw"
-			return True
+			# check fi the board is full
+			if not np.any(self.board_state == 0):
+				self.winner = "Draw"
+				return True
 
 		# if board not full, game is not over
 		return False
@@ -92,10 +92,10 @@ class GameStatus:
 		for i in range(rows - 2):
 			for j in range(cols):
 				triplet = self.board_state[i:i+3, j]
-			if np.all(triplet == 1):  # Player 1 (or O)
-				scores += 1
-			elif np.all(triplet == 2):  # Player 2 (or X)
-				scores -= 1
+				if np.all(triplet == 1):  # Player 1 (or O)
+					scores += 1
+				elif np.all(triplet == 2):  # Player 2 (or X)
+					scores -= 1
 
 		# now we check diagonal of 11 22 33 or 00 11 22 aka the \ and next we check the / diagonal
 		for i in range(rows - 2):
